@@ -310,7 +310,7 @@ CONFMC_BFM_API
 int BfmGpout( con_Handle_t handle
             , unsigned int value )
 {
-   unsigned int cbuf[1], pbuf[1];
+   unsigned int cbuf[1]; //pbuf[1];
    unsigned int done;
    cbuf[0] = 1<<31
            | 1<<30

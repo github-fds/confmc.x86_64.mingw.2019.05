@@ -8,23 +8,27 @@
 /// @file conapi_int.h
 /// @brief This header file contains core function prototypes for CON-FMC PCB V1.1.
 /// @author Ando Ki
-/// @data 9/2/2019
+/// @data 20/5/2019
 //------------------------------------------------------------------------------
 #include <stdint.h>
 #include "conapi_error.h"
 
-#if (defined(_WIN32)||defined(_WIN64))
-   #ifdef BUILDING_DLL
-      #define CONFMC_API __declspec(dllexport)
-   #else
-      #ifdef BUILDING_STATIC
-         #define CONFMC_API
-      #else
-         #define CONFMC_API __declspec(dllimport)
-      #endif
-   #endif
+#if defined(_MSC_VER)
+    #define CONFMC_API
 #else
-   #define CONFMC_API
+    #if (defined(_WIN32)||defined(_WIN64))
+       #ifdef BUILDING_DLL
+          #define CONFMC_API __declspec(dllexport)
+       #else
+          #ifdef BUILDING_STATIC
+             #define CONFMC_API
+          #else
+             #define CONFMC_API __declspec(dllimport)
+          #endif
+       #endif
+    #else
+       #define CONFMC_API
+    #endif
 #endif
 
 #ifdef __cplusplus
@@ -119,6 +123,22 @@ struct _con_Fx3Info {
 typedef struct _con_Fx3Info con_Fx3Info_t;
 
 //------------------------------------------------------------------------------
+#ifdef _MSC_VER
+#pragma pack(push, 1)
+struct _con_BoardInfo {
+        char     MagicID[4]; // null terminated string for "FPI"
+        uint32_t FormatVersion; // Little-endian BCD, e.g., 0x2018_04_25
+        uint32_t Length; // num of bytes from the beginning to the end (CRC included)
+        char     Name[32]; // null terminated string for board name, e.g., "CON-FMC-FX3"
+        uint32_t PcbVersion; // Little-endian BCD, e.g., 0x1810_0101
+        uint32_t PcbSerial; // Little-endian binary (not BCD)
+        char     MajorInfo[32]; // null terminated string for major part, e.g., "Cypress FX3"
+        char     MajorPart[32]; // null terminated string for board name, e.g., "CYUSB3014-BZXI
+        uint32_t CRC; // formular 0x04C11DB7 (0xED888320/reversed) use not inverted
+};
+#pragma pack(pop)
+
+#else
 struct __attribute__((__packed__)) _con_BoardInfo {
         char     MagicID[4]; // null terminated string for "FPI"
         uint32_t FormatVersion; // Little-endian BCD, e.g., 0x2018_04_25
@@ -130,6 +150,7 @@ struct __attribute__((__packed__)) _con_BoardInfo {
         char     MajorPart[32]; // null terminated string for board name, e.g., "CYUSB3014-BZXI
         uint32_t CRC; // formular 0x04C11DB7 (0xED888320/reversed) use not inverted
 };
+#endif
 typedef struct _con_BoardInfo con_BoardInfo_t;
 
 //------------------------------------------------------------------------------
@@ -198,6 +219,8 @@ CONFMC_API uint32_t conCrc32( uint8_t      *pMessage
 //------------------------------------------------------------------------------
 // Revision history
 //
+// 2019.05.20: '__pragma()' for 'struct _con_BoardInfo' to support Visual Studio
+//             _MSC_VER added
 // 2019.02.09: 'conFx3I2cTransfer()' --> 'conUsbFx3I2cTransfer()'
 //             'conUsbGetFx3Info()' added (can be called without con_Handle)
 //             'conUsbGetCid()' added (can be called without con_Handle)

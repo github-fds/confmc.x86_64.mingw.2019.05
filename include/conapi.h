@@ -8,22 +8,26 @@
 /// @file conapi.h
 /// @brief This header file contains function prototypes for CON-FMC PCB V1.1.
 /// @author Ando Ki
-/// @data 10/2/2019
+/// @data 20/5/2019
 //------------------------------------------------------------------------------
 #include "conapi_int.h"
 
-#if (defined(_WIN32)||defined(_WIN64))
-   #ifdef BUILDING_DLL
-      #define CONFMC_API __declspec(dllexport)
-   #else
-      #ifdef BUILDING_STATIC
-         #define CONFMC_API
-      #else
-         #define CONFMC_API __declspec(dllimport)
-      #endif
-   #endif
+#if defined(_MSC_VER)
+    #define CONFMC_API
 #else
-   #define CONFMC_API
+    #if (defined(_WIN32)||defined(_WIN64))
+       #ifdef BUILDING_DLL
+          #define CONFMC_API __declspec(dllexport)
+       #else
+          #ifdef BUILDING_STATIC
+             #define CONFMC_API
+          #else
+             #define CONFMC_API __declspec(dllimport)
+          #endif
+       #endif
+    #else
+       #define CONFMC_API
+    #endif
 #endif
 
 #ifdef __cplusplus
@@ -105,6 +109,7 @@ CONFMC_API const char *conErrorMsgLibusb( int error );
 //------------------------------------------------------------------------------
 // Revision history
 //
+// 2019.05.20: _MSC_VER added
 // 2019.02.10: Updated
 // 2018.05.18: conZlpWrite() added
 // 2018.03.20: Started by Ando Ki (adki@future-ds.com)

@@ -12,6 +12,9 @@
 // Note that "data" carries justified data.
 #include "conapi.h"
 
+#if defined(_MSC_VER)
+   #define CONFMC_BFM_API
+#else
 #if (defined(_WIN32)||defined(_WIN64))
    #ifdef BUILDING_DLL
       #define CONFMC_BFM_API __declspec(dllexport)
@@ -24,6 +27,7 @@
    #endif
 #else
    #define CONFMC_BFM_API
+#endif
 #endif
 
 #ifdef __cplusplus
