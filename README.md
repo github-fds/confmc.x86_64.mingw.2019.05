@@ -28,7 +28,7 @@ See '*Section 3 Software installation*' of '[doc/FDS-TD-2018-03-001-CON-FMC-User
    ```> git clone https://github.com/github-fds/confmc.x86_64.mingw.2019.05.git```
  2. Copy the retrieved directory to somewhere<br>
    ```> copy confmc.x86_64.mingw.2019.05 C:\confmc\2019.05```
- 3. Set '**CONFMC_HOME**' environment variable to '*C:\confmc\2019.05*'
+ 3. Set '**CONFMC_HOME**' environment variable to '*C:\confmc\2019.05*'<br>
    ```> setx -m CONFMC_HOME C:\confmc\2019.05```
 
 ## How to use
